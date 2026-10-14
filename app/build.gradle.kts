@@ -25,5 +25,5 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.activity:activity-compose:1.9.2")
-    implementation("com.github.bhlangonijr:chesslib:1.3.4")
+    implementation("com.github.bhlangonijr:chesslib:1.3.3")
 }
