@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent { BTheme {
             val blocked = remember { mutableStateListOf<String>().apply { addAll(Prefs.blocked(this@MainActivity)) } }
             var minutes by remember { mutableIntStateOf(Prefs.minutes(this@MainActivity)) }
+            var everyTime by remember { mutableStateOf(Prefs.everyTime(this@MainActivity)) }
             LazyColumn(
                 Modifier.systemBarsPadding().padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -61,8 +62,15 @@ class MainActivity : ComponentActivity() {
                 item {
                     Box(Modifier.fillMaxWidth().brutal(B.Blue).padding(14.dp)) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            BText("Unlock time after a solve", 18)
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                            BText("When to ask for a puzzle", 18)
+                            BButton("Every time I open a locked app", Modifier.fillMaxWidth(), if (everyTime) B.Green else B.White) {
+                                everyTime = true; Prefs.setEveryTime(this@MainActivity, true)
+                            }
+                            BButton("Once, then unlock for a while", Modifier.fillMaxWidth(), if (!everyTime) B.Green else B.White) {
+                                everyTime = false; Prefs.setEveryTime(this@MainActivity, false)
+                            }
+                            if (everyTime) BText("Leaving the app locks it again.", 14)
+                            else Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                                 BButton("−", fill = B.White) { minutes = (minutes - 5).coerceAtLeast(5); Prefs.setMinutes(this@MainActivity, minutes) }
                                 BText("$minutes min", 26)
                                 BButton("+", fill = B.White) { minutes = (minutes + 5).coerceAtMost(60); Prefs.setMinutes(this@MainActivity, minutes) }

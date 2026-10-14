@@ -71,6 +71,7 @@ class PuzzleActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Puzzles.load(this)
         target = intent.getStringExtra("target")
         val label = target?.let { runCatching { packageManager.getApplicationLabel(packageManager.getApplicationInfo(it, 0)).toString() }.getOrNull() }
         setContent { BTheme {
@@ -80,7 +81,7 @@ class PuzzleActivity : ComponentActivity() {
                 if (st.solved) {
                     delay(700)
                     target?.let { t ->
-                        Prefs.unlock(this@PuzzleActivity, t)
+                        Prefs.grant(this@PuzzleActivity, t)
                         packageManager.getLaunchIntentForPackage(t)?.let { startActivity(it) }
                     }
                     finish()
