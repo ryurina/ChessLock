@@ -15,6 +15,11 @@ object Prefs {
     fun minutes(c: Context) = sp(c).getInt("minutes", 15)
     fun setMinutes(c: Context, m: Int) = sp(c).edit().putInt("minutes", m).apply()
 
+    fun minRating(c: Context) = sp(c).getInt("minRating", 400)
+    fun maxRating(c: Context) = sp(c).getInt("maxRating", 1600)
+    fun setRatings(c: Context, min: Int, max: Int) =
+        sp(c).edit().putInt("minRating", min).putInt("maxRating", max).apply()
+
     /** true = puzzle on every open (app relocks when you leave it); false = timed unlock. */
     fun everyTime(c: Context) = sp(c).getBoolean("everyTime", false)
     fun setEveryTime(c: Context, b: Boolean) = sp(c).edit().putBoolean("everyTime", b).apply()

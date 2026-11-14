@@ -27,9 +27,18 @@ object Puzzles {
         }
     }
 
-    fun random(not: Puzzle? = null): Puzzle {
-        var p = all.random()
-        if (p == not && all.size > 1) p = all.random()
+    fun inRange(min: Int, max: Int) = all.filter { it.rating in min..max }
+
+    /** Random puzzle inside the chosen Elo range; if none match, the ones closest to the range. */
+    fun random(c: Context, not: Puzzle? = null): Puzzle {
+        val min = Prefs.minRating(c)
+        val max = Prefs.maxRating(c)
+        val pool = inRange(min, max).ifEmpty {
+            val mid = (min + max) / 2
+            all.sortedBy { kotlin.math.abs(it.rating - mid) }.take(10)
+        }
+        var p = pool.random()
+        if (p == not && pool.size > 1) p = pool.random()
         return p
     }
 }

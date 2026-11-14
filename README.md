@@ -41,6 +41,10 @@ The service only reads which app is in the foreground. It does not read screen c
 
 Some phone brands stop background services to save battery. If the lock stops working, exempt ChessLock from battery optimization.
 
+## Choosing the difficulty
+
+On the home screen, set a minimum and maximum puzzle Elo (steps of 100). ChessLock only picks puzzles in that range, and shows how many match. If none match, it uses the closest ones.
+
 ## Adding more puzzles
 
 The app reads puzzles from `app/src/main/assets/puzzles.txt`. Without that file it uses 3 built-in puzzles.
@@ -55,10 +59,10 @@ To import thousands from the Lichess puzzle database:
 
 ```
 pip install zstandard
-python tools/make_puzzles.py lichess_db_puzzle.csv.zst 3000 600 1600
+python tools/make_puzzles.py lichess_db_puzzle.csv.zst 6000 400 2800
 ```
 
-The arguments are the file, how many puzzles to pick, and the minimum and maximum rating. Download the database from https://database.lichess.org/#puzzles, then commit the generated `puzzles.txt`.
+The arguments are the file, how many puzzles to pick, and the minimum and maximum rating. Include a wide range, because you choose the Elo range you actually play in the app. Download the database from https://database.lichess.org/#puzzles, then commit the generated `puzzles.txt`.
 
 ## Project layout
 

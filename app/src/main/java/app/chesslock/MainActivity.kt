@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Puzzles.load(this)
         val pm = packageManager
         val apps = pm.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0)
             .map { it.activityInfo.packageName to it.loadLabel(pm).toString() }
@@ -36,6 +37,9 @@ class MainActivity : ComponentActivity() {
             val blocked = remember { mutableStateListOf<String>().apply { addAll(Prefs.blocked(this@MainActivity)) } }
             var minutes by remember { mutableIntStateOf(Prefs.minutes(this@MainActivity)) }
             var everyTime by remember { mutableStateOf(Prefs.everyTime(this@MainActivity)) }
+            var minR by remember { mutableIntStateOf(Prefs.minRating(this@MainActivity)) }
+            var maxR by remember { mutableIntStateOf(Prefs.maxRating(this@MainActivity)) }
+            val matching = remember(minR, maxR) { Puzzles.inRange(minR, maxR).size }
             LazyColumn(
                 Modifier.systemBarsPadding().padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -78,6 +82,20 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+                item {
+                    Box(Modifier.fillMaxWidth().brutal(B.Yellow).padding(14.dp)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            BText("Puzzle difficulty (Elo)", 18)
+                            Stepper("Min", minR,
+                                { minR = (minR - 100).coerceAtLeast(400); Prefs.setRatings(this@MainActivity, minR, maxR) },
+                                { minR = (minR + 100).coerceAtMost(maxR - 100); Prefs.setRatings(this@MainActivity, minR, maxR) })
+                            Stepper("Max", maxR,
+                                { maxR = (maxR - 100).coerceAtLeast(minR + 100); Prefs.setRatings(this@MainActivity, minR, maxR) },
+                                { maxR = (maxR + 100).coerceAtMost(3000); Prefs.setRatings(this@MainActivity, minR, maxR) })
+                            BText(if (matching > 0) "$matching puzzles in this range." else "No puzzles in this range. The closest ones are used.", 14)
+                        }
+                    }
+                }
                 item { BButton("Try a puzzle", Modifier.fillMaxWidth(), B.Green) { startActivity(Intent(this@MainActivity, PuzzleActivity::class.java)) } }
                 item { BText("Choose apps to lock", 24) }
                 items(apps, key = { it.first }) { (pkg, name) ->
@@ -96,5 +114,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
         } }
+    }
+}
+
+@Composable
+private fun Stepper(label: String, value: Int, onMinus: () -> Unit, onPlus: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        BText(label, 16, Modifier.width(48.dp))
+        BButton("−", fill = B.White, onClick = onMinus)
+        BText("$value", 22, Modifier.width(64.dp))
+        BButton("+", fill = B.White, onClick = onPlus)
     }
 }

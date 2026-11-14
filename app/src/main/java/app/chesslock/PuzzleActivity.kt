@@ -76,7 +76,7 @@ class PuzzleActivity : ComponentActivity() {
         val label = target?.let { runCatching { packageManager.getApplicationLabel(packageManager.getApplicationInfo(it, 0)).toString() }.getOrNull() }
         setContent { BTheme {
             BackHandler { goHome() }
-            var st by remember { mutableStateOf(PuzzleState(Puzzles.random())) }
+            var st by remember { mutableStateOf(PuzzleState(Puzzles.random(this@PuzzleActivity))) }
             LaunchedEffect(st.solved) {
                 if (st.solved) {
                     delay(700)
@@ -88,7 +88,7 @@ class PuzzleActivity : ComponentActivity() {
                 }
             }
             LaunchedEffect(st.failed) {
-                if (st.failed) { delay(1400); st = PuzzleState(Puzzles.random(st.puzzle)) }
+                if (st.failed) { delay(1400); st = PuzzleState(Puzzles.random(this@PuzzleActivity, st.puzzle)) }
             }
             Column(
                 Modifier.systemBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
@@ -98,7 +98,7 @@ class PuzzleActivity : ComponentActivity() {
                     BText(if (label != null) "$label is locked. Solve to open it." else "Practice puzzle", 22)
                 }
                 Box(Modifier.fillMaxWidth().brutal(if (st.failed) B.Red else if (st.solved) B.Green else B.White, 4.dp).padding(12.dp)) {
-                    BText("${if (st.whiteView) "White" else "Black"} to move. ${st.msg}", 16)
+                    BText("${if (st.whiteView) "White" else "Black"} to move (puzzle ${st.puzzle.rating}). ${st.msg}", 16)
                 }
                 BoardView(st.board, st.tick, st.whiteView, st.selected, st.targets(), st.last) { st.tap(it) }
                 Spacer(Modifier.height(4.dp))

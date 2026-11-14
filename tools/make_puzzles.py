@@ -2,16 +2,16 @@
 
 1. Download lichess_db_puzzle.csv.zst from https://database.lichess.org/#puzzles
 2. pip install zstandard   (only needed for the .zst file)
-3. python tools/make_puzzles.py lichess_db_puzzle.csv.zst 3000 600 1600
-   args: file, how many puzzles (default 2000), min rating (600), max rating (1600)
+3. python tools/make_puzzles.py lichess_db_puzzle.csv.zst 6000 400 2800
+   args: file, how many puzzles (default 6000), min rating (400), max rating (2800)
 """
 import csv, io, random, sys
 from pathlib import Path
 
 src = sys.argv[1]
-n = int(sys.argv[2]) if len(sys.argv) > 2 else 2000
-lo = int(sys.argv[3]) if len(sys.argv) > 3 else 600
-hi = int(sys.argv[4]) if len(sys.argv) > 4 else 1600
+n = int(sys.argv[2]) if len(sys.argv) > 2 else 4000
+lo = int(sys.argv[3]) if len(sys.argv) > 3 else 400
+hi = int(sys.argv[4]) if len(sys.argv) > 4 else 2800
 
 if src.endswith(".zst"):
     import zstandard
