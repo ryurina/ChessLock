@@ -5,7 +5,7 @@
 An Android app that locks the apps that waste your time (Instagram, YouTube, Facebook, TikTok, or any app you choose). To open one, you have to solve a chess puzzle first.
 
 <p align="center">
-  <a href="https://github.com/ryurina/ChessLock/releases/download/Demo/chesslock_debug.apk"><img src="https://img.shields.io/badge/Download-APK-FF3B1F?style=for-the-badge&logo=android&logoColor=white" alt="Download the ChessLock APK"></a>
+  <a href="https://github.com/ryurina/ChessLock/releases/download/Demo1/ChessLock.apk"><img src="https://img.shields.io/badge/Download-APK-FF3B1F?style=for-the-badge&logo=android&logoColor=white" alt="Download the ChessLock APK"></a>
 </p>
 
 ## How it works
